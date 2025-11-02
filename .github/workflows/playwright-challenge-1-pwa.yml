@@ -1,0 +1,75 @@
+name: Playwright CI for Challenge 1
+
+on:
+  push:
+    branches: [ "main" ]
+    paths:
+      - 'challenge-1-pwa-automation/**'
+  pull_request:
+    branches: [ "main" ]
+    paths:
+      - 'challenge-1-pwa-automation/**'
+
+jobs:
+  test:
+    name: Run Playwright Tests
+    runs-on: ubuntu-latest
+    
+    # In a real project, I would use GitHub Secrets to set this.
+    # This allows to switch environments and run tests against different environments.
+    env:
+      PW_ENV: 'local'
+
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18.x'
+
+      - name: Install dependencies
+        run: npm ci
+        working-directory: ./challenge-1-pwa-automation/app
+
+      - name: Cache Playwright browsers
+        # I use this cache to speed up the process by reusing the browsers between runs
+        id: cache-playwright
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/ms-playwright
+          key: ${{ runner.os }}-playwright-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-playwright-
+
+      - name: Install Playwright browsers
+        # This will only run if the cache didn't hit.
+        if: steps.cache-playwright.outputs.cache-hit != 'true'
+        run: npx playwright install --with-deps
+        working-directory: ./challenge-1-pwa-automation/app
+
+      - name: Start application with Docker Compose
+        run: docker-compose up -d
+        working-directory: ./challenge-1-pwa-automation
+
+      - name: Wait for services to be ready
+        # It will repeatedly try to connect to the web server's port.
+        # The 'timeout' command will kill it after 60 seconds if it never comes up. Better than having a fixed sleep time in the pipeline
+        run: |
+          timeout 60s bash -c 'until curl -s http://localhost:3000 > /dev/null; do
+            echo "Waiting for web server..."
+            sleep 2
+          done'
+
+      - name: Run Playwright tests
+        run: npm test
+        working-directory: ./challenge-1-pwa-automation/app
+
+      - name: Upload test report on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report
+          path: challenge-1-pwa-automation/app/playwright-report/
+          retention-days: 7

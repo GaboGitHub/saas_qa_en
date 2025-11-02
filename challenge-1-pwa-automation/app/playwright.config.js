@@ -1,10 +1,6 @@
-// @ts-check
 const { defineConfig, devices } = require('@playwright/test');
 const { baseURL } = require('./config');
 
-/**
- * @see https://playwright.dev/docs/test-configuration
- */
 module.exports = defineConfig({
   testDir: './tests/specs',
   fullyParallel: true,
@@ -13,14 +9,16 @@ module.exports = defineConfig({
   workers: process.env.CI ? 1 : undefined,
   reporter: 'html',
   use: {
-    baseURL: baseURL, // Use the baseURL from the config file
-    trace: 'on-first-retry',
+    baseURL: baseURL, // Use the baseURL from the config.js file
+    trace: 'retain-on-failure', // Retain the trace on failure to help with debugging. Very useful for debugging in CI.
   },
   projects: [
     {
       name: 'chromium',
       use: { ...devices['Desktop Chrome'] },
     },
+
+    // we can enable other browsers here if we want to test against them as well as mobile emulators
     // {
     //   name: 'firefox',
     //   use: { ...devices['Desktop Firefox'] },
@@ -28,7 +26,7 @@ module.exports = defineConfig({
 
     // {
     //   name: 'webkit',
-    //   use: { ...devices['Desktop Safari'] },
+    //   use: { ...devices['iPhone 15'] },
     // },
   ],
 });
