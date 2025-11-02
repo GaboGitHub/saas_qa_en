@@ -50,7 +50,7 @@ jobs:
         working-directory: ./challenge-1-pwa-automation/app
 
       - name: Start application with Docker Compose
-        run: docker-compose up -d
+        run: docker compose up -d # Use the modern 'docker compose' command
         working-directory: ./challenge-1-pwa-automation
 
       - name: Wait for services to be ready
