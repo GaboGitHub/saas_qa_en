@@ -114,7 +114,6 @@ The most interesting challenge was diagnosing the behavior of the statistics cou
 
 If I had more time, I would:
 
--   **Use TypeScript**: While I used JavaScript for this challenge to keep it simple and dependency-free, in any real-world project, I would insist on using TypeScript. The benefits of static typing for catching errors early, improving autocompletion, and making the code more self-documenting are massive, especially as a test suite grows in complexity.
+-   **Use TypeScript**: While I used JavaScript for this challenge to keep it simple and dependency-free, in any real-world project, I would insist on using TypeScript. The benefits of static typing for catching errors early, improving autocompletion, and making the code more self-documenting are big, especially as a test suite grows in complexity.
 -   **Add Visual Regression Testing**: Use Playwright's screenshot capabilities to ensure the UI's look and feel doesn't change unexpectedly between releases.
--   **Expand Accessibility Testing**: While Playwright has some accessibility features, I'd integrate a library like `axe-core` to perform more in-depth automated accessibility checks.
 -   **Component Tests**: For a larger application, I'd advocate for adding component-level tests (using Playwright or another tool) to test UI components in isolation, which is faster and more targeted than E2E tests.
