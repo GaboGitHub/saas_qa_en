@@ -29,16 +29,16 @@ spec:
           name: http
         livenessProbe:
           httpGet:
-            path: /healt
-            port: 12345
+            path: /health
+            port: {{ .Values.api.port }}
           initialDelaySeconds: 5
           timeoutSeconds: 1
           periodSeconds: 3
           failureThreshold: 1
         readinessProbe:
           httpGet:
-            path: /healt
-            port: 12345
+            path: /health
+            port: {{ .Values.api.port }}
           initialDelaySeconds: 5
           periodSeconds: 3
           timeoutSeconds: 1
@@ -106,9 +106,4 @@ spec:
         - containerPort: 80
           name: http
         resources:
-          limits:
-            cpu: 100m
-            memory: 8Mi
-          requests:
-            cpu: 50m
-            memory: 4Mi
+          {{- toYaml .Values.resources | nindent 10 }}
