@@ -1,0 +1,34 @@
+version: "3.8"
+
+services:
+  postgres:
+    image: postgres:15-alpine
+    environment:
+      POSTGRES_DB: sekios
+      POSTGRES_USER: sekoia
+      POSTGRES_PASSWORD: sekoia123
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+  api:
+    image: postgrest/postgrest:v11.2.0 # v2.0 uses PostgREST v11 (requires JWT for some features)
+    environment:
+      PGRST_DB_URI: postgres://sekoia:sekoia123@postgres:5432/sekios
+      PGRST_DB_ANON_ROLE: sekoia
+      PGRST_DB_SCHEMA: public
+      PGRST_SERVER_HOST: "*"
+      # ❌ BUG : JWT_SECRET manquant pour v2.0
+      # PostgREST v11 peut fonctionner sans JWT mais certaines fonctionnalités
+      # comme l'authentification avancée nécessitent cette variable
+      # PGRST_JWT_SECRET: "your-secret-key-here"
+    ports:
+      - "8080:3000"
+    depends_on:
+      - postgres
+    labels:
+      - "app.version=2.0"
+
+volumes:
+  pgdata:

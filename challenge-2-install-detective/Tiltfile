@@ -1,0 +1,40 @@
+# pyright: reportUndefinedVariable=false
+# noqa: F821
+# ruff: noqa
+
+# Tiltfile for Challenge 2 - Install Detective
+
+# Create namespace
+k8s_yaml(local("kubectl create namespace sekios --dry-run=client -o yaml"))
+
+# Deploy Helm chart
+k8s_yaml(helm("./helm-chart", name="sekios", namespace="sekios"))
+
+# Watch for changes in helm chart
+watch_file("./helm-chart")
+
+# Port forwards for debugging
+k8s_resource("sekios-api", port_forwards="8080:5678")
+k8s_resource("sekios-frontend", port_forwards="8081:80")
+
+# Define resources with labels and dependencies
+k8s_resource(
+    "sekios-api",
+    new_name="SekiOS API",
+    labels=["backend"],
+    resource_deps=[],
+)
+
+k8s_resource(
+    "sekios-frontend",
+    new_name="SekiOS Frontend",
+    labels=["frontend"],
+    resource_deps=[],
+)
+
+k8s_resource(
+    "sekios-worker",
+    new_name="SekiOS Worker",
+    labels=["backend"],
+    resource_deps=[],
+)

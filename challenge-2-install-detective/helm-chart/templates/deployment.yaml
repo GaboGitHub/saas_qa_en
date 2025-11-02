@@ -1,0 +1,114 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sekios-api
+  namespace: sekios
+  labels:
+    app: sekios
+    component: api
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: sekios
+      component: api
+  template:
+    metadata:
+      labels:
+        app: sekios
+        component: api
+    spec:
+      containers:
+      - name: api
+        image: "{{ .Values.api.image.repository }}:{{ .Values.api.image.tag }}"
+        args:
+          - "-text=SekiOS API v1.0"
+          - "-listen=:{{ .Values.api.port }}"
+        ports:
+        - containerPort: {{ .Values.api.port }}
+          name: http
+        livenessProbe:
+          httpGet:
+            path: /healt
+            port: 12345
+          initialDelaySeconds: 5
+          timeoutSeconds: 1
+          periodSeconds: 3
+          failureThreshold: 1
+        readinessProbe:
+          httpGet:
+            path: /healt
+            port: 12345
+          initialDelaySeconds: 5
+          periodSeconds: 3
+          timeoutSeconds: 1
+          failureThreshold: 1
+        envFrom:
+        - configMapRef:
+            name: sekios-config
+        resources:
+          {{- toYaml .Values.resources | nindent 10 }}
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sekios-worker
+  namespace: sekios
+  labels:
+    app: sekios
+    component: worker
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: sekios
+      component: worker
+  template:
+    metadata:
+      labels:
+        app: sekios
+        component: worker
+    spec:
+      containers:
+      - name: worker
+        image: "{{ .Values.worker.image.repository }}:{{ .Values.worker.image.tag }}"
+        command: ["sh", "-c", "while true; do echo 'Processing...'; sleep 30; done"]
+        envFrom:
+        - configMapRef:
+            name: sekios-config
+        resources:
+          {{- toYaml .Values.resources | nindent 10 }}
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sekios-frontend
+  namespace: sekios
+  labels:
+    app: sekios
+    component: frontend
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: sekios
+      component: frontend
+  template:
+    metadata:
+      labels:
+        app: sekios
+        component: frontend
+    spec:
+      containers:
+      - name: frontend
+        image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+        ports:
+        - containerPort: 80
+          name: http
+        resources:
+          limits:
+            cpu: 100m
+            memory: 8Mi
+          requests:
+            cpu: 50m
+            memory: 4Mi

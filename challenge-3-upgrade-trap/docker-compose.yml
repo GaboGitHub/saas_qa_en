@@ -1,0 +1,32 @@
+version: "3.8"
+
+services:
+  postgres:
+    image: postgres:15-alpine
+    environment:
+      POSTGRES_DB: sekios
+      POSTGRES_USER: sekoia
+      POSTGRES_PASSWORD: sekoia123
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./migrations/v1-schema.sql:/docker-entrypoint-initdb.d/01-schema.sql
+      - ./init-data.sql:/docker-entrypoint-initdb.d/02-data.sql
+      - pgdata:/var/lib/postgresql/data
+
+  api:
+    image: postgrest/postgrest:v10.0.0 # v1.0 uses PostgREST v10
+    environment:
+      PGRST_DB_URI: postgres://sekoia:sekoia123@postgres:5432/sekios
+      PGRST_DB_ANON_ROLE: sekoia
+      PGRST_DB_SCHEMA: public
+      PGRST_SERVER_HOST: "*"
+    ports:
+      - "8080:3000"
+    depends_on:
+      - postgres
+    labels:
+      - "app.version=1.0"
+
+volumes:
+  pgdata:

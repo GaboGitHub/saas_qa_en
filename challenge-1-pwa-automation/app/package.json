@@ -1,0 +1,22 @@
+{
+  "name": "sekoia-todo-pwa",
+  "version": "1.0.0",
+  "description": "Simple Todo PWA for QA testing",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "test": "playwright test",
+    "test:ui": "playwright test --ui",
+    "test:headed": "playwright test --headed",
+    "test:report": "playwright show-report",
+    "format": "prettier --write ."
+  },
+  "dependencies": {
+    "express": "^4.18.2"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.56.1",
+    "@types/node": "^24.9.2",
+    "prettier": "^3.3.2"
+  }
+}

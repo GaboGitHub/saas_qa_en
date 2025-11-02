@@ -1,0 +1,37 @@
+# pyright: reportUndefinedVariable=false
+# noqa: F821
+# ruff: noqa
+
+# Tiltfile for Challenge 3 - Upgrade Trap
+
+# Start PostgreSQL v1.0
+docker_compose("./docker-compose.yml")
+
+# Watch for changes
+watch_file("./docker-compose.yml")
+watch_file("./migrations")
+
+# Custom buttons
+local_resource(
+    "upgrade-to-v2",
+    cmd="./upgrade-v1-to-v2.sh",
+    auto_init=False,
+    trigger_mode=TRIGGER_MODE_MANUAL,
+    labels=["operations"],
+)
+
+local_resource(
+    "check-data",
+    cmd='docker-compose exec -T postgres psql -U sekoia -d sekios -c "SELECT COUNT(*) FROM users;"',
+    auto_init=False,
+    trigger_mode=TRIGGER_MODE_MANUAL,
+    labels=["validation"],
+)
+
+local_resource(
+    "reset-v1",
+    cmd="docker-compose down -v && docker-compose up -d",
+    auto_init=False,
+    trigger_mode=TRIGGER_MODE_MANUAL,
+    labels=["operations"],
+)
