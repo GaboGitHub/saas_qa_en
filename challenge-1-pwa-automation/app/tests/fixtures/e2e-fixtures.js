@@ -5,7 +5,7 @@ import { EventDashboardPage } from '../pages/EventDashboardPage';
  * This file demonstrates how to extend the base Playwright `test` object with fixtures.
  * For this project, we are only adding a fixture for our single page object, `EventDashboardPage`.
  * 
- * In a larger, multi-page application, you would extend this file to include fixtures
+ * In a larger, multi-page application, I would extend this file to include fixtures
  * for each page object. For example:
  *   loginPage: async ({ page }, use) => {
  *     await use(new LoginPage(page));

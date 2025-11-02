@@ -10,7 +10,7 @@ module.exports = defineConfig({
   reporter: 'html',
   use: {
     baseURL: baseURL, // Use the baseURL from the config.js file
-    trace: 'retain-on-failure', // Retain the trace on failure to help with debugging. Very useful for debugging in CI.
+    trace: 'retain-on-failure', // Retain the trace on failure to help with debugging.
   },
   projects: [
     {
@@ -18,7 +18,7 @@ module.exports = defineConfig({
       use: { ...devices['Desktop Chrome'] },
     },
 
-    // we can enable other browsers here if we want to test against them as well as mobile emulators
+    // We could enable other browsers here if we wanted to test against them as well as mobile emulators.
     // {
     //   name: 'firefox',
     //   use: { ...devices['Desktop Firefox'] },

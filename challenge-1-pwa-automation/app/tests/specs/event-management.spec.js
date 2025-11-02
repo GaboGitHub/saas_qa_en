@@ -198,7 +198,7 @@ test.describe('SekiOS Event Manager', () => {
         // TODO: Clarify requirements for counter behavior on deletion.
         // The current implementation does not decrement the "Total Events" counter when an event is removed from the UI.
         // This might be intentional (soft-delete?) or a bug.
-        // We need to confirm if the counter should reflect the number of visible events or the total number of events ever created.
+        // I would need to confirm with the development team if the counter should reflect the number of visible events or the total number of events ever created.
     });
 
     test.fixme('should correctly update the critical events counter', async ({ eventDashboardPage }) => {
