@@ -11,8 +11,10 @@ CREATE TABLE IF NOT EXISTS audit_logs (
     created_at TIMESTAMP DEFAULT NOW()
 );
 
--- ❌ BUG : Supprime une colonne référencée par legacy_mappings via foreign key
--- Cela DOIT échouer à cause de la contrainte fk_legacy_user mais l'erreur est ignorée par le script
+-- ✅ FIX: Drop the foreign key constraint first
+ALTER TABLE legacy_mappings DROP CONSTRAINT fk_legacy_user;
+
+-- Now it's safe to drop the column
 ALTER TABLE users DROP COLUMN legacy_id;
 
 -- Nouvelle colonne (ne sera jamais ajoutée si la migration échoue)

@@ -1,6 +1,6 @@
 # Summary of My Approach
 
-For this challenge, I want to be transparent: I am not very experienced with Kubernetes, Helm, and Tilt at this level, so I approached it step by step. I had to do some trial-and-error, consult Helm's official documentation and I ask AI for help with some commands and validations.
+For this challenge, I want to be transparent: I am not an expert with Kubernetes, Helm, and Tilt at this level, so I approached it step by step. I had to do some trial-and-error, consult Helm's official documentation and I ask GPT for help with some commands and validations.
 Even so, I was able to understand what was going on and get to a working solution.
 
 ### Initial Setup & Kube Context Issues

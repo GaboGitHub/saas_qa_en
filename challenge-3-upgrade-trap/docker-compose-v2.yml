@@ -19,10 +19,7 @@ services:
       PGRST_DB_ANON_ROLE: sekoia
       PGRST_DB_SCHEMA: public
       PGRST_SERVER_HOST: "*"
-      # ❌ BUG : JWT_SECRET manquant pour v2.0
-      # PostgREST v11 peut fonctionner sans JWT mais certaines fonctionnalités
-      # comme l'authentification avancée nécessitent cette variable
-      # PGRST_JWT_SECRET: "your-secret-key-here"
+      PGRST_JWT_SECRET: "@/jwt.secret" #FIX: The JWT secret is now correctly set in the environment variable
     ports:
       - "8080:3000"
     depends_on:
